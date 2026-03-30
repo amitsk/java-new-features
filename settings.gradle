@@ -1,0 +1,10 @@
+/*
+ * settings.gradle — Groovy DSL (converted from .kts to fix Java 25 compatibility)
+ */
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'java-new-features'
+include('app')

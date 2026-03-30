@@ -1,0 +1,53 @@
+/*
+ * app/build.gradle — Groovy DSL (converted from .kts to fix Java 25 compatibility with Gradle 8.14)
+ */
+
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JUnit 5 (Jupiter)
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Mockito (5.14+ required for Java 25 class file support via Byte Buddy 1.15+)
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
+    testImplementation 'net.bytebuddy:byte-buddy:1.15.11'
+    testImplementation 'net.bytebuddy:byte-buddy-agent:1.15.11'
+
+    // AssertJ
+    testImplementation 'org.assertj:assertj-core:3.25.3'
+
+    // Jackson (JSON)
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+
+    // Logback + Logstash encoder
+    implementation 'ch.qos.logback:logback-classic:1.5.6'
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+application {
+    mainClass = 'com.example.App'
+}
+
+tasks.named('test') {
+    useJUnitPlatform {
+        def tagsToInclude = project.findProperty('tags') ?: ''
+        if (tagsToInclude) {
+            includeTags(tagsToInclude)
+        }
+    }
+}
