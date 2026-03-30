@@ -1,0 +1,8 @@
+# mise version manager config — ensures everyone on the team uses the same Java version
+# https://mise.jdx.dev/
+#
+# Usage:
+#   mise install    — install the pinned Java version
+#   mise use        — activate for this project
+[tools]
+java = "corretto-25"

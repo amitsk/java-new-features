@@ -45,16 +45,81 @@ Not there yet? Start with the [official Java Tutorials](https://docs.oracle.com/
 | **IntelliJ IDEA Community** | Free, best-in-class Java IDE | [Download](https://www.jetbrains.com/idea/download/) |
 | **JUnit 5** | Modern unit testing framework | [junit.org](https://junit.org/junit5/) |
 
-> 💡 **Tip — Use SDKMAN! to manage Java versions**
+---
+
+## Managing Java Versions
+
+Working on multiple projects often means needing different Java versions. Two popular tools handle this automatically.
+
+### Option A — mise (recommended)
+
+[mise](https://mise.jdx.dev/) is a fast, polyglot version manager (Java, Node.js, Python, …). It reads a per-project config file and activates the right version automatically when you `cd` into a directory.
+
+**Install mise:**
+```bash
+curl https://mise.run | sh
+# Add to your shell (bash/zsh):
+echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+**Install and use Java 25:**
+```bash
+mise use --global java@corretto-25   # Amazon Corretto 25 — sets global default
+java -version                        # openjdk version "25" ...
+```
+
+**Pin the Java version per project** by creating a `.mise.toml` file in the project root:
+
+```toml
+# .mise.toml  — checked into git, shared with the whole team
+[tools]
+java = "corretto-25"
+```
+
+When anyone (or CI) `cd`s into the project, mise automatically activates Corretto 25. No manual `sdk use` needed.
+
+> 💡 Available Java distributions via mise: `corretto-25`, `temurin-25`, `zulu-25`, `graalvm-25`. Run `mise ls-remote java` to see all options.
+
+**Other useful mise commands:**
+```bash
+mise install              # install all tools declared in .mise.toml
+mise list                 # show installed versions
+mise use java@temurin-21  # switch to Temurin 21 for this project only
+mise exec -- java -version # run a command with the project's Java version
+```
+
+> 📝 **Note — `.tool-versions` for asdf compatibility**
 >
-> ```bash
-> curl -s "https://get.sdkman.io" | bash
-> sdk install java 25-amzn      # Amazon Corretto 25 (LTS)
-> sdk use java 25-amzn
-> java -version  # should print: openjdk version "25" ...
+> mise also supports the legacy `.tool-versions` format used by [asdf](https://asdf-vm.com/):
 > ```
->
-> SDKMAN! lets you switch between Java versions instantly — very handy when working on multiple projects.
+> # .tool-versions
+> java corretto-25
+> ```
+> Either file works; `.mise.toml` is preferred for new projects.
+
+---
+
+### Option B — SDKMAN!
+
+[SDKMAN!](https://sdkman.io/) is the long-standing Java version manager, especially popular on macOS/Linux:
+
+```bash
+curl -s "https://get.sdkman.io" | bash
+sdk install java 25-amzn      # Amazon Corretto 25 (LTS)
+sdk use java 25-amzn          # switch in current shell
+sdk default java 25-amzn      # set as global default
+java -version
+```
+
+Pin a version per project with a `.sdkmanrc` file in the project root:
+
+```bash
+# .sdkmanrc
+java=25-amzn
+```
+
+Enable auto-switching: `sdkman_auto_env=true` in `~/.sdkman/etc/config`.
 
 ---
 
